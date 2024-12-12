@@ -1,0 +1,65 @@
+# @package _global_
+
+# to execute this experiment run:
+# python train.py experiment=example
+
+defaults:
+  - override /data: building_data
+  - override /model: building_seg
+  - override /callbacks: default
+  - override /trainer: default
+  - override /logger: neptune
+
+# all parameters below will be merged with parameters from default configurations set above
+# this allows you to overwrite only specified parameters
+
+tags: ["UNet"]
+
+seed: 12345
+
+trainer:
+  min_epochs: 10
+  max_epochs: 10
+  gradient_clip_val: 0.5
+
+model:
+    optimizer:
+      _target_: torch.optim.Adam
+      _partial_: true
+      lr: 0.001
+      weight_decay: 0.0
+    
+    scheduler:
+      _target_: torch.optim.lr_scheduler.ReduceLROnPlateau
+      _partial_: true
+      mode: min
+      factor: 0.1
+      patience: 10
+    
+    net:
+      _target_: segmentation_models_pytorch.Unet
+      encoder_name: "resnet34"
+      encoder_weights: "imagenet"
+      in_channels: 3
+      classes: 1
+
+data:
+  batch_size: 64
+
+logger:
+  neptune:
+      project: mine-ai/DCLC3
+
+callbacks:
+    model_checkpoint:
+      dirpath: ${paths.output_dir}/checkpoints
+      filename: "epoch_{epoch:03d}"
+      monitor: "val/iou"
+      mode: "max"
+      save_last: True
+      auto_insert_metric_name: False
+    
+    early_stopping:
+      monitor: "val/iou"
+      patience: 2
+      mode: "max"
