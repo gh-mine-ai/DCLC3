@@ -1,0 +1,8 @@
+_target_: src.data.building_datasets.BuildingDataModule
+data_type: "acc_building"
+data_dir: "C:/Users/syedd/Documents/mine/DCLC3/data/dataset/New_dataset/Images"
+augment_factor: 1 
+building_threshold: 0.1
+batch_size: 32 
+num_workers: 4
+pin_memory: True
