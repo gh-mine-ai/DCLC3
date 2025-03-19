@@ -1,0 +1,9 @@
+_target_: src.data.building_datasets.BuildingDataModule
+data_type: "concat"
+# data_dir: "data/dataset/New_New_dataset/Images"
+transforms : True
+augment_factor: 1 
+building_threshold: 0.2
+batch_size: 32
+num_workers: 4
+pin_memory: True

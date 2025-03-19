@@ -1,0 +1,75 @@
+# @package _global_
+
+# to execute this experiment run:
+# python train.py experiment=example
+
+defaults:
+  - override /data: building_data
+  - override /model: building_seg
+  - override /callbacks: default
+  - override /trainer: default
+  - override /logger: neptune
+
+# all parameters below will be merged with parameters from default configurations set above
+# this allows you to overwrite only specified parameters
+
+tags: ["top_561(shuffle) Mask2Former | swin-small | Aug"]
+
+experiment_name: "mask2former_swinsmall_top_561(shuffle)_aug" 
+
+seed: 12345
+
+trainer:
+  min_epochs: 20
+  max_epochs: 50
+  gradient_clip_val: 0.5
+  accelerator: gpu
+
+model:
+    optimizer:
+      _target_: torch.optim.AdamW
+      _partial_: true
+      lr: 0.001
+      weight_decay: 0.01
+    
+    scheduler:
+      _target_: torch.optim.lr_scheduler.ReduceLROnPlateau
+      _partial_: true
+      mode: min
+      factor: 0.5
+      patience: 5
+    
+    # net:
+    #   # hardcoded with mask2former now
+    #   _target_: segmentation_models_pytorch.DeepLabV3Plus
+    #   encoder_name: "resnet152"
+    #   encoder_weights: "imagenet"
+    #   in_channels: 3
+    #   classes: 1
+
+data:
+    data_type: "concat"
+    # data_dir: "data/dataset/New_New_dataset/Images"
+    transforms : True
+    augment_factor: 1
+    building_threshold: 0.2
+    batch_size: 16
+    num_workers: 8
+
+logger:
+  neptune:
+      project: mine-ai/DCLC3
+
+callbacks:
+    model_checkpoint:
+      dirpath: ${paths.output_dir}/checkpoints
+      filename: "epoch_{epoch:03d}"
+      monitor: "val/iou"
+      mode: "max"
+      save_last: True
+      auto_insert_metric_name: False
+    
+    early_stopping:
+      monitor: "val/iou"
+      patience: 5
+      mode: "max"
