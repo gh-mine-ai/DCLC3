@@ -1,6 +1,6 @@
 <div align="center">
 
-# Your Project Name
+# Data-Centric Land Cover Classification
 
 <a href="https://pytorch.org/get-started/locally/"><img alt="PyTorch" src="https://img.shields.io/badge/PyTorch-ee4c2c?logo=pytorch&logoColor=white"></a>
 <a href="https://pytorchlightning.ai/"><img alt="Lightning" src="https://img.shields.io/badge/-Lightning-792ee5?logo=pytorchlightning&logoColor=white"></a>
@@ -13,7 +13,7 @@
 
 ## Description
 
-What it does
+This project focuses on developing an AI-driven ranking system to automatically assess and rank images based on their levels of label noise in a semantic segmentation dataset. The goal is to create a ranking that aligns with an undisclosed ground-truth ranking, evaluated using the Kendall Tau score. By effectively identifying noisy samples before training, this approach enhances data reliability, ultimately improving model performance in real-world machine learning applications.
 
 ## Installation
 
